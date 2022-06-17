@@ -1,10 +1,8 @@
 package com.abdelmalek.simplehtmltowordsparser.domain.datasource.datamanager
 
-import com.abdelmalek.simplehtmltowordsparser.domain.entities.WordResult
+import com.abdelmalek.simplehtmltowordsparser.domain.entities.WordsResponseResult
 
 interface WordsDataManager {
-    fun getWords(callback: (WordResult) -> Unit)
-    fun saveWords(words: Map<String, Int>?): Boolean
-    fun getRemoteData(): Map<String, Int>?
-    fun getLocalData(): Map<String, Int>?
+    fun getWords(getWordsCallback: (WordsResponseResult) -> Unit)
+    fun saveWords(words: Map<String, Int>): Boolean
 }
