@@ -10,7 +10,7 @@ import com.abdelmalek.simplehtmltowordsparser.domain.datasource.remote.WordsRemo
 import com.abdelmalek.simplehtmltowordsparser.domain.entities.WordsResponseResult
 import java.util.concurrent.Executor
 
-class WordsDataManager(
+class WordsDataManagerImpl(
     private val threadExecutor: Executor,
     private val remoteDataSource: WordsRemoteDataSource,
     private val localDataSource: WordsLocalDataSource,
@@ -22,35 +22,27 @@ class WordsDataManager(
         Exception("Error fetching data")
     }
 
-    private val emptyDataException by lazy {
-        Exception("Local database is empty")
-    }
-
     override fun getWords(getWordsCallback: (WordsResponseResult) -> Unit) {
         threadExecutor.execute {
-            if (networkChecker.isConnected()) {
-                val wordsList = getRemoteData()
-                when {
-                    wordsList.isNullOrEmpty() -> getWordsCallback(
-                        WordsResponseResult.Failure(
-                            networkFailureException
+            try {
+                if (networkChecker.isConnected()) {
+                    when (val wordsList = getRemoteData()) {
+                        null -> getWordsCallback(
+                            WordsResponseResult.Failure(
+                                networkFailureException
+                            )
                         )
-                    )
-                    else -> {
-                        saveWords(wordsList)
-                        getWordsCallback(WordsResponseResult.Success(wordsList))
+                        else -> {
+                            saveWords(wordsList)
+                            getWordsCallback(WordsResponseResult.Success(wordsList))
+                        }
                     }
+                } else {
+                    getWordsCallback(WordsResponseResult.Success(getLocalData()))
                 }
-            } else {
-                val wordsList = getLocalData()
-                when {
-                    wordsList.isEmpty() -> getWordsCallback(WordsResponseResult.Failure(emptyDataException))
-                    else -> {
-                        getWordsCallback(WordsResponseResult.Success(wordsList))
-                    }
-                }
+            } catch (e: Exception) {
+                getWordsCallback(WordsResponseResult.Failure(e))
             }
-
         }
     }
 
@@ -68,7 +60,6 @@ class WordsDataManager(
             }
             null
         }
-
     }
 
     private fun getLocalData(): Map<String, Int> {

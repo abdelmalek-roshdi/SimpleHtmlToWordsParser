@@ -14,10 +14,13 @@ class WordsLocalDataSourceImpl(context: Context) : WordsLocalDataSource {
             dbHelper.insertWord(word = it.key, count = it.value)
         }
 
+        dbHelper.close()
         return true
     }
 
     override fun getWords(): Map<String, Int> {
-        return dbHelper.getWords()
+        val words = dbHelper.getWords()
+        dbHelper.close()
+        return words
     }
 }
