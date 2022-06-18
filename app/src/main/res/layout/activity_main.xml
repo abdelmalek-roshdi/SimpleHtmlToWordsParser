@@ -8,6 +8,32 @@
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
+        <ImageView
+            android:id="@+id/sort_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:clickable="@{viewModel.state.success}"
+            android:contentDescription="sort words"
+            android:onClick="@{() -> viewModel.sortWords()}"
+            android:scaleType="centerInside"
+            android:src="@drawable/sort_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <SearchView
+            android:id="@+id/search_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="40dp"
+            android:clickable="@{viewModel.state.success}"
+            android:focusable="@{viewModel.state.success}"
+            android:focusableInTouchMode="@{viewModel.state.success}"
+            android:onQueryTextChange="@{(s) -> viewModel.searchListener.onQueryTextChange(s)}"
+            android:onQueryTextSubmit="@{(s) -> viewModel.searchListener.onQueryTextChange(s)}"
+            app:layout_constraintEnd_toStartOf="@+id/sort_image"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/words_recycler_view"
             android:layout_width="match_parent"
@@ -16,7 +42,9 @@
             app:bindWordsList="@{viewModel.words}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/sort_image"
+            tools:listitem="@layout/word_list_item"
+            tools:visibility="gone" />
 
         <ProgressBar
             android:layout_width="40dp"
@@ -27,11 +55,13 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="gone" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="error"
             android:scaleType="centerInside"
             android:src="@drawable/error_state"
             android:visibility="@{viewModel.state.failure ? View.VISIBLE : View.GONE}"
@@ -39,21 +69,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="error" />
+            tools:visibility="gone" />
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="empty"
             android:scaleType="centerInside"
             android:src="@drawable/empty_state"
             android:visibility="@{viewModel.state.empty ? View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:contentDescription="empty" />
+            tools:visibility="gone" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <data>
+
         <import type="android.view.View" />
 
         <variable

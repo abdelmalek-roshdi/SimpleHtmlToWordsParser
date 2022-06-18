@@ -15,8 +15,18 @@ class WordsAdapter : ListAdapter<Word, WordsAdapter.WordsViewHolder>(WordDiffUti
         @BindingAdapter("bindWordsList")
         fun bindWords(recyclerView: RecyclerView, words: List<Word>?) {
             if (recyclerView.adapter == null) {
-                recyclerView.adapter = WordsAdapter()
+                val adapter = WordsAdapter()
+                recyclerView.adapter = adapter
                 recyclerView.layoutManager = LinearLayoutManager(recyclerView.context)
+                adapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {
+                    override fun onItemRangeMoved(
+                        fromPosition: Int,
+                        toPosition: Int,
+                        itemCount: Int
+                    ) {
+                        (recyclerView.layoutManager as LinearLayoutManager).scrollToPosition(0)
+                    }
+                })
             }
             words?.let {
                 (recyclerView.adapter as WordsAdapter).submitList(it)

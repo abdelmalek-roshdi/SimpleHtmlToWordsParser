@@ -8,11 +8,11 @@ class SortWordsUseCaseImpl : SortWordsUseCase {
     override fun sortWords(words: List<Word>, sortingOrder: WordsSorting): List<Word> {
         return if (sortingOrder == WordsSorting.ASC) {
             words.sortedBy {
-                it.word
+                it.count
             }
         } else {
             words.sortedByDescending {
-                it.word
+                it.count
             }
         }
     }

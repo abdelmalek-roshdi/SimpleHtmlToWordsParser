@@ -5,10 +5,10 @@ import com.abdelmalek.simplehtmltowordsparser.domain.entities.Word
 
 class WordDiffUtilCallBack : DiffUtil.ItemCallback<Word>() {
     override fun areItemsTheSame(oldItem: Word, newItem: Word): Boolean {
-        return oldItem.word == newItem.word
+        return oldItem == newItem
     }
 
     override fun areContentsTheSame(oldItem: Word, newItem: Word): Boolean {
-        return oldItem == newItem
+        return oldItem.word == newItem.word
     }
 }
