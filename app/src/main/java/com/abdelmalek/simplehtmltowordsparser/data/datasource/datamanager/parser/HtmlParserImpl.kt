@@ -36,12 +36,12 @@ class HtmlParserImpl : HtmlParser {
         val wordsArray = parsedWords.split(" ")
         val wordsMap = HashMap<String, Int>()
         wordsArray.forEach {
-            val cleanString = it.replace("[^A-Za-z0-9]".toRegex(), "")
-            if (cleanString != "") {
-                if (wordsMap.containsKey(cleanString)) {
-                    wordsMap[cleanString] = wordsMap[cleanString]!! + 1
+            val word = it.replace("[^A-Za-z0-9]".toRegex(), "")
+            if (word != "") {
+                if (wordsMap.containsKey(word)) {
+                    wordsMap[word] = wordsMap[word]!! + 1
                 } else {
-                    wordsMap[cleanString] = 1
+                    wordsMap[word] = 1
                 }
             }
         }
