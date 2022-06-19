@@ -44,7 +44,9 @@ class WordsViewModel(private val useCases: UseCasesModel) : ViewModel() {
         if (query.isEmpty() || query.isBlank()) {
             _words.postValue(_allWords.value)
         } else {
-            _words.postValue(_allWords.value?.filter { it.word.contains(query, true) })
+            _allWords.value?.let {
+                _words.postValue(useCases.searchWordsUseCase.searchWords(query, it))
+            }
         }
     }
 
@@ -80,6 +82,5 @@ class WordsViewModel(private val useCases: UseCasesModel) : ViewModel() {
     private fun setState(result: WordsResponseResult) {
         _state.postValue(result)
     }
-
 
 }
